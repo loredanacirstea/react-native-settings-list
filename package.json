@@ -1,6 +1,6 @@
 {
   "name": "@ark-us/react-native-settings-list",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "A clean and highly customizable React Native implementation of a list of settings for a settings page.",
   "main": "index.js",
   "scripts": {
@@ -25,8 +25,8 @@
   },
   "homepage": "https://github.com/evetstech/react-native-settings-list#readme",
   "devDependencies": {
-    "react-native": ">=0.18.0",
-    "react": ">=0.14.0"
+    "react": ">=0.14.0",
+    "react-native": ">=0.18.0"
   },
   "dependencies": {
     "create-react-class": "^15.6.2",
