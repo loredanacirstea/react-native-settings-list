@@ -13,7 +13,6 @@ import {
   TextInput,
   Switch,
   Image,
-  ViewPropTypes
 } from 'react-native';
 
 const ARROW_ICON = require('./img/icon-arrow-settings.png');
@@ -311,15 +310,15 @@ SettingsList.Item = createReactClass({
     /**
      * Item Box Style
      */
-    itemBoxStyle : ViewPropTypes.style,
+    itemBoxStyle : PropTypes.object,
     /**
      * Title Box Style
      */
-    titleBoxStyle: ViewPropTypes.style,
+    titleBoxStyle: PropTypes.object,
     /**
      * Right Side Style
      */
-    rightSideStyle: ViewPropTypes.style,
+    rightSideStyle: PropTypes.object,
     /**
      * Editable Right Side Style
      */
