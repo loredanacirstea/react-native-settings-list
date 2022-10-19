@@ -26,6 +26,7 @@ class SettingsList extends React.Component {
     defaultTitleStyle: PropTypes.object,
     defaultTitleInfoPosition: PropTypes.string,
     scrollViewProps: PropTypes.object,
+    indexStart: PropTypes.number,
   };
 
   static defaultProps ={
@@ -33,7 +34,8 @@ class SettingsList extends React.Component {
     borderColor: 'black',
     defaultItemSize: 50,
     underlayColor: 'transparent',
-    defaultTitleStyle: {fontSize: 16}
+    defaultTitleStyle: {fontSize: 16},
+    indexStart: 0,
   };
 
   _getGroups(){
@@ -72,20 +74,20 @@ class SettingsList extends React.Component {
     return (
       <ScrollView {...this.props.scrollViewProps} ref="_scrollView">
         {this._getGroups().map((group, index) => {
-          return this._groupView(group, index);
+          return this._groupView(group, this.props.indexStart + index);
         })}
       </ScrollView>
     )
   }
 
-  _groupView(group, index){
+  _groupView(group, grindex){
     if(group.header){
       return (
-        <View key={'group_' + index}>
+        <View key={'group_' + grindex}>
           <Text style={[{margin:5},group.header.headerStyle]} numberOfLines={group.header.headerNumberOfLines} ellipsizeMode="tail" ref={group.header.headerRef}>{group.header.headerText}</Text>
           <View style={{borderTopWidth:1, borderBottomWidth:1, borderColor: this.props.borderColor}}>
             {group.items.map((item, index) => {
-              return this._itemView(item,index, group.items.length);
+              return this._itemView(item, grindex, index, group.items.length);
             })}
           </View>
         </View>
@@ -96,25 +98,25 @@ class SettingsList extends React.Component {
         items = (
           <View style={{borderTopWidth:1, borderBottomWidth:1, borderColor: this.props.borderColor}}>
             {group.items.map((item, index) => {
-              return this._itemView(item,index, group.items.length);
+              return this._itemView(item, grindex, index, group.items.length);
             })}
           </View>
         );
       }
 
       return (
-        <View key={'group_' + index}>
+        <View key={'group_' + grindex}>
           {items}
         </View>
       )
     }
   }
 
-  _itemEditableBlock(item, index, position) {
+  _itemEditableBlock(item, keystr, position) {
 
     return ([
         <Text
-            key={'itemTitle_' + index}
+            key={'itemTitle_' + keystr}
             style={[
               item.titleStyle ? item.titleStyle : this.props.defaultTitleStyle,
               position === 'Bottom' ? null : styles.titleText
@@ -132,10 +134,10 @@ class SettingsList extends React.Component {
     ])
   }
 
-  _itemTitleBlock(item, index, position) {
+  _itemTitleBlock(item, keystr, position) {
     return ([
       <Text
-          key={'itemTitle_' + index}
+          key={'itemTitle_' + keystr}
           style={[
             item.titleStyle ? item.titleStyle : this.props.defaultTitleStyle,
             position === 'Bottom' ? null : styles.titleText
@@ -144,7 +146,7 @@ class SettingsList extends React.Component {
       </Text>,
       item.titleInfo ?
         <Text
-            key={'itemTitleInfo_' + index}
+            key={'itemTitleInfo_' + keystr}
             style={[
               item.rightSideStyle ? item.rightSideStyle
               :
@@ -158,7 +160,7 @@ class SettingsList extends React.Component {
     ])
   }
 
-  _itemView(item, index, max){
+  _itemView(item, grindex, index, max){
     var border;
 
     if (item.type && item.type.displayName) {
@@ -180,8 +182,10 @@ class SettingsList extends React.Component {
 
     let titleInfoPosition = item.titleInfoPosition ? item.titleInfoPosition : this.props.defaultTitleInfoPosition;
 
+    const keystr = 'item_' + grindex + '_' + index;
+
     return (
-      <TouchableHighlight accessible={false} key={'item_' + index} underlayColor={item.underlayColor ? item.underlayColor : this.props.underlayColor} onPress={item.onPress} onLongPress={item.onLongPress} ref={item.itemRef}>
+      <TouchableHighlight accessible={false} key={keystr} underlayColor={item.underlayColor ? item.underlayColor : this.props.underlayColor} onPress={item.onPress} onLongPress={item.onLongPress} ref={item.itemRef}>
         <View style={item.itemBoxStyle ? item.itemBoxStyle : [styles.itemBox, {backgroundColor: item.backgroundColor ? item.backgroundColor : this.props.backgroundColor}]}>
           {item.icon}
           {item.isAuth ?
@@ -213,9 +217,9 @@ class SettingsList extends React.Component {
           <View style={item.titleBoxStyle ? item.titleBoxStyle : [styles.titleBox, border, {minHeight:item.itemWidth ? item.itemWidth : this.props.defaultItemSize}]}>
             {titleInfoPosition === 'Bottom' ?
                 <View style={{flexDirection:'column',flex:1,justifyContent:'center'}}>
-                    {item.isEditable ? this._itemEditableBlock(item, index, 'Bottom') : this._itemTitleBlock(item, index, 'Bottom')}
+                    {item.isEditable ? this._itemEditableBlock(item, keystr, 'Bottom') : this._itemTitleBlock(item, keystr, 'Bottom')}
                 </View>
-              : item.isEditable ? this._itemEditableBlock(item, index) : this._itemTitleBlock(item, index)}
+              : item.isEditable ? this._itemEditableBlock(item, keystr) : this._itemTitleBlock(item, keystr)}
 
             {item.rightSideContent ? item.rightSideContent : null}
             {item.hasSwitch ?

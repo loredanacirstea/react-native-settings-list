@@ -1,6 +1,6 @@
 {
   "name": "@ark-us/react-native-settings-list",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "description": "A clean and highly customizable React Native implementation of a list of settings for a settings page.",
   "main": "index.js",
   "scripts": {
